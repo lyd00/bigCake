@@ -9,8 +9,12 @@ const MEMBER_NAME_UNKNOWM = "Unknown"
 let genesisTimestamp = new Date(1541650394000);
 
 function dateToCycle(dayDate) {
-    let d = new Date(dayDate + " 12:13:14");
-    let cycle = (d.getTime() - genesisTimestamp.getTime()) / (86400000);
+    let d = dayDate; 
+    if (!(d instanceof Date)) {
+        d = new Date(dayDate + " 12:13:14");
+    }
+    
+    let cycle = parseInt((d.getTime() - genesisTimestamp.getTime()) / (86400000), 10);
     return cycle;
 }
 
@@ -41,11 +45,7 @@ function findMember(clubMembers, address) {
     }
 }
 
-function calcAllocation(dayDate, superNodeName) {
-    let cycle = dateToCycle(dayDate);
-    
-
-
+async function calcAllocationByCycle(cycle, superNodeName) {
     return queryVotes(superNodeName, cycle).then(function (votes) {
         if (votes.cycleVotes.length <= 0 || 
             votes.addressVotes.length <= 0) {
@@ -80,22 +80,22 @@ function calcAllocation(dayDate, superNodeName) {
 
                     voteTotal: 0,
                     voteRatio: 0,       
+
+                
                 }
                 if (memberName !== MEMBER_NAME_UNKNOWM) {
                     let personalPledgeVote = member.pledgeAmount * AMOUNT_VOTE_RATION
 
+                    fundMembersVote[memberName].earningsAddr = addressVote.earningsAddr
                     fundMembersVote[memberName].pledgeVote = personalPledgeVote 
-                    fundMembersVote[memberName].pledgeVoteRatio = personalPledgeVote / totalVote 
-
-                    fundMembersVote[memberName].voteTotal = fundMembersVote[memberName].pledgeVote
-                    fundMembersVote[memberName].voteRatio = fundMembersVote[memberName].pledgeVoteRatio
+                    fundMembersVote[memberName].pledgeVoteRatio = fundMembersVote[memberName].pledgeVote / totalVote 
                 }
             } 
     
             fundMembersVote[memberName].realVote += parseFloat(addressVote.voteTotal, 10)
-            fundMembersVote[memberName].realVoteRatio = fundMembersVote[memberName].realVote / totalVote
-
             fundMembersVote[memberName].voteTotal = fundMembersVote[memberName].realVote + fundMembersVote[memberName].pledgeVote
+
+            fundMembersVote[memberName].realVoteRatio = fundMembersVote[memberName].realVote / totalVote
             fundMembersVote[memberName].voteRatio = fundMembersVote[memberName].voteTotal / totalVote
 
 
@@ -116,6 +116,10 @@ function calcAllocation(dayDate, superNodeName) {
             fundMembersVote: fundMembersVote
         }
     });
+}
+async function calcAllocation(dayDate, superNodeName) {
+    let cycle = dateToCycle(dayDate);
+    return calcAllocationByCycle(cycle, superNodeName)
 }
 
 function printTotalVote(totalVote, originTotalVote, pledgeVote) {
@@ -141,9 +145,9 @@ function printFundMembersVote(fundMembersVote) {
     })
 }
 
-calcAllocation("2018-11-28", "Chinese node")
-
 module.exports = {
     findMember: findMember,
-    calcAllocation: calcAllocation
+    calcAllocation: calcAllocation,
+    calcAllocationByCycle: calcAllocationByCycle,
+    dateToCycle: dateToCycle
 }

@@ -1,12 +1,23 @@
 {
+    "managerPort": 8934,
+    "superNodeName": "Chinese node",
+    "startDate": "2018-11-27",
     "foundationMembers": [
+        {
+            "name": "小室友",
+            "addrs": [
+                "vite_75ceeccf29224cbce423bfaa84c8e9aa61353cd7e50c3484ed"
+            ],
+            "earningsAddr": "vite_75ceeccf29224cbce423bfaa84c8e9aa61353cd7e50c3484ed",
+            "pledgeAmount": 0
+        },
         {
             "name": "A1",
             "addrs": [
                 "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354"
             ],
             "earningsAddr": "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354",
-            "pledgeAmount": 1250000
+            "pledgeAmount": 125000
         },
         {
             "name": "A2",
@@ -18,7 +29,7 @@
                 "vite_20491cde8edb5f11b8fc0acfeae1fa943ff3efa069726a6a41"
             ],
             "earningsAddr": "vite_4c17335b318dd8caf4b380205a94dae80c1b675ebb7245200f",
-            "pledgeAmount": 1250000
+            "pledgeAmount": 125000
         },
         {
             "name": "A3",
@@ -26,7 +37,7 @@
                 "vite_61404d3b6361f979208c8a5c442ceb87c1f072446f58118f68"
             ],
             "earningsAddr": "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354",
-            "pledgeAmount": 1250000
+            "pledgeAmount": 125000
         },
         {
             "name": "A4",
@@ -34,7 +45,7 @@
                 "vite_0149e4e16364002ab7681f15be6e2c7372f5986eed824ac8e6"
             ],
             "earningsAddr": "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354",
-            "pledgeAmount": 1250000
+            "pledgeAmount": 125000
         }
     ]
 }
