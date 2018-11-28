@@ -1,5 +1,6 @@
 
 const fetch = require('node-fetch')
+const config = require('./config')
 
 const PLEDGE_AMOUNT = 50 * 10000
 const AMOUNT_VOTE_RATION = 1152
@@ -28,7 +29,7 @@ function queryVotes(superNodeName, cycle) {
 }
 
 function readFoundationMembers () {
-    return []
+    return config.foundationMembers
 }
 
 function findMember(clubMembers, address) {
