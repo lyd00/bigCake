@@ -1,6 +1,10 @@
 
 const fetch = require('node-fetch')
 
+const PLEDGE_AMOUNT = 50 * 10000
+const AMOUNT_VOTE_RATION = 1152
+const MEMBER_NAME_UNKNOWM = "Unknown"
+
 let genesisTimestamp = new Date(1541650394000);
 
 function dateToCycle(dayDate) {
@@ -21,8 +25,6 @@ function queryVotes(superNodeName, cycle) {
             
             return resJson.data            
         })
-
-
 }
 
 function readFoundationMembers () {
@@ -31,6 +33,7 @@ function readFoundationMembers () {
         "addrs": [
             "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354"
         ],
+        "earningsAddr": "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354",
         "pledgeAmount": 12.5 * 10000
     }, {
         "name": "王莛岳", 
@@ -41,18 +44,21 @@ function readFoundationMembers () {
             "vite_1384252652eac061df7333de3a74e6ff4d4afc7e57ccbdda9e",
             "vite_20491cde8edb5f11b8fc0acfeae1fa943ff3efa069726a6a41"
         ],
+        "earningsAddr": "vite_4c17335b318dd8caf4b380205a94dae80c1b675ebb7245200f",
         "pledgeAmount": 12.5 * 10000
     }, {
         "name": "袁章", 
         "addrs": [
             "vite_61404d3b6361f979208c8a5c442ceb87c1f072446f58118f68"
         ],
+        "earningsAddr": "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354",
         "pledgeAmount": 12.5 * 10000
     }, {
         "name": "李焱达",
         "addrs": [
             "vite_0149e4e16364002ab7681f15be6e2c7372f5986eed824ac8e6"
         ],
+        "earningsAddr": "vite_ef3c95e83d0d1cbf694108a61b632591678cd656a264d32354",
         "pledgeAmount": 12.5 * 10000
     }]
 }
@@ -69,11 +75,9 @@ function findMember(clubMembers, address) {
 function calcAllocation(dayDate, superNodeName) {
     let cycle = dateToCycle(dayDate);
     
-    const PLEDGE_AMOUNT = 50 * 10000
-    const AMOUNT_VOTE_RATION = 1152
-    const MEMBER_NAME_UNKNOWM = "Unknown"
 
-    queryVotes(superNodeName, cycle).then(function (votes) {
+
+    return queryVotes(superNodeName, cycle).then(function (votes) {
         if (votes.cycleVotes.length <= 0 || 
             votes.addressVotes.length <= 0) {
             throw new Error(`奖励数据为空，日期${dayDate}无奖励`)
@@ -110,7 +114,7 @@ function calcAllocation(dayDate, superNodeName) {
                 }
                 if (memberName !== MEMBER_NAME_UNKNOWM) {
                     let personalPledgeVote = member.pledgeAmount * AMOUNT_VOTE_RATION
-                    
+
                     fundMembersVote[memberName].pledgeVote = personalPledgeVote 
                     fundMembersVote[memberName].pledgeVoteRatio = personalPledgeVote / totalVote 
 
@@ -135,6 +139,13 @@ function calcAllocation(dayDate, superNodeName) {
         printTotalVote(totalVote, originTotalVote, pledgeVote)
         console.log("")
         printFundMembersVote(fundMembersVote)
+        
+        return {
+            totalVote: totalVote,
+            originTotalVote: originTotalVote,
+            pledgeVote: pledgeVote,
+            fundMembersVote: fundMembersVote
+        }
     });
 }
 
@@ -161,5 +172,8 @@ function printFundMembersVote(fundMembersVote) {
     })
 }
 
-
 calcAllocation("2018-11-28", "Chinese node")
+
+module.exports = {
+    findMember: findMember
+}
