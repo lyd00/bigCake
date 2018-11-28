@@ -13,9 +13,26 @@
     <div id="app">
     </div>
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@vite/vitejs@0.0.1-6/dist/vite.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script>
+    const provider = new ViteJS.WS_RPC({
+        // url: 'wss://testnet.vitewallet.com/test/ws',
+        url: 'wss://testnet.vitewallet.com/ws',
+        timeout: 60000
+    });
+    const ViteLibs = new ViteJS(provider);
+
+    provider.on('connect', () => {
+        ViteLibs.Vite['ledger_getSnapshotChainHeight']().then(({ result }) => {
+            console.log(result)
+        });
+    });
+
+
     const client = axios.create({
         baseURL: 'https://some-domain.com/api/',
         timeout: 2000,
