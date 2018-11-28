@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+</head>
+
+<body>
+    <div id="app">
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const client = axios.create({
+        baseURL: 'https://some-domain.com/api/',
+        timeout: 2000,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    });
+    const vm = new Vue({
+        el: "#app",
+        data() {
+            return { computedExperssion: "($vote+12.5)/$total" }
+        },
+        template: `
+        <div class="container">
+            <div class="field expression">
+                <div class="control">
+                    <input class="input is-primary" type="text" :placeholder="computedExperssion">
+                </div>
+            </div>
+            <a class="button is-primary">计算</a>
+        </div>
+        `
+
+
+    });
+</script>
+<style>
+.container{
+    margin-top:50px;
+    display: flex;
+    justify-content: center;
+}
+.expression{
+    width:400px;
+    border-radius:0;
+}
+.expression input{
+    border-radius:0;
+}
+.button{
+    border-radius:0;
+}
+</style>
+</html>
