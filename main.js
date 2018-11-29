@@ -4,7 +4,7 @@ const store = require('./store')
 
 async function main () {
     await store.initTable()
-    
+
     job.startJob()
     managerServer.startServer()
 }
