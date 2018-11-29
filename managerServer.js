@@ -10,6 +10,7 @@ const config =require('./config');
 
 function startServer () {
     router.get('/db/cycleInfo', controller.dbCycle)
+    router.get('/rt/cycleInfo', controller.rtCycle)
     
 
     app.use(router.routes())

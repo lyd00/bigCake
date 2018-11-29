@@ -1,6 +1,7 @@
 
 const fetch = require('node-fetch')
 const config = require('./config')
+const moment = require('moment')
 
 const PLEDGE_AMOUNT = 50 * 10000
 const AMOUNT_VOTE_RATION = 1152
@@ -18,9 +19,16 @@ function dateToCycle(dayDate) {
     return cycle;
 }
 
+function cycleToDate(cycle) {
+    let timestamp = genesisTimestamp.getTime() + cycle * 86400000
+    return new moment(timestamp)
+}
+
+
 function queryVotes(superNodeName, cycle) {
     let fromCycle = cycle - 1;
-    return fetch(`http://150.109.60.74:8080/vote/node/query?nodeName=${superNodeName}&fromCycle=${fromCycle}&toCycle=${cycle}`)
+    let url = `http://150.109.60.74:8080/vote/node/query?nodeName=${encodeURIComponent(superNodeName)}&fromCycle=${fromCycle}&toCycle=${cycle}`
+    return fetch(url)
         .then(function (res) {
             return res.json()
         }).then(function (resJson) {
@@ -47,9 +55,9 @@ function findMember(clubMembers, address) {
 
 async function calcAllocationByCycle(cycle, superNodeName) {
     return queryVotes(superNodeName, cycle).then(function (votes) {
-        if (votes.cycleVotes.length <= 0 || 
+        if (!votes || votes.cycleVotes.length <= 0 || 
             votes.addressVotes.length <= 0) {
-            throw new Error(`奖励数据为空，日期${dayDate}无奖励`)
+            throw new Error(`奖励数据为空，${cycle}轮无奖励`)
         }
     
         let originTotalVote = parseFloat(votes.cycleVotes[0].totalVote, 10)
@@ -110,6 +118,8 @@ async function calcAllocationByCycle(cycle, superNodeName) {
         printFundMembersVote(fundMembersVote)
         
         return {
+            date: `${cycleToDate(cycle - 1).format("YYYY-MM-DD 12:13:14")} - ${cycleToDate(cycle).format("YYYY-MM-DD 12:13:14")}`,
+            cycle: cycle,
             totalVote: totalVote,
             originTotalVote: originTotalVote,
             pledgeVote: pledgeVote,
