@@ -26,8 +26,7 @@ function cycleToDate(cycle) {
 
 
 function queryVotes(superNodeName, cycle) {
-    let fromCycle = cycle - 1;
-    let url = `http://150.109.60.74:8080/vote/node/query?nodeName=${encodeURIComponent(superNodeName)}&fromCycle=${fromCycle}&toCycle=${cycle}`
+    let url = `http://150.109.60.74:8080/vote/node/query?nodeName=${encodeURIComponent(superNodeName)}&fromCycle=${cycle}&toCycle=${cycle}`
     return fetch(url)
         .then(function (res) {
             return res.json()
