@@ -5,7 +5,6 @@ const moment = require('moment')
 
 const PLEDGE_AMOUNT = 50 * 10000
 const AMOUNT_VOTE_RATION = 1152
-const MEMBER_NAME_UNKNOWM = "Unknown"
 
 let genesisTimestamp = new Date(1541650394000);
 
@@ -71,7 +70,7 @@ async function calcAllocationByCycle(cycle, superNodeName) {
             let memberName
             if (!member) {
                 console.error(`出现基金会成员之外的地址: ${addr}`)
-                memberName = MEMBER_NAME_UNKNOWM
+                memberName = addr
             } else {
                 memberName = member.name
             }
@@ -90,7 +89,7 @@ async function calcAllocationByCycle(cycle, superNodeName) {
 
                 
                 }
-                if (memberName !== MEMBER_NAME_UNKNOWM) {
+                if (memberName !== addr) {
                     let personalPledgeVote = member.pledgeAmount * AMOUNT_VOTE_RATION
 
                     fundMembersVote[memberName].earningsAddr = addressVote.earningsAddr
