@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@vite/vitejs": "1.0.1-5",
     "bluebird": "^3.5.3",
     "koa": "^2.6.2",
     "koa-router": "^7.4.0",
