@@ -1,4 +1,4 @@
-import { client, constant } from '@vite/vitejs';
+const { client, constant }=require('@vite/vitejs');
 const { method } = constant;
 const { initClientWithIPC } = client;
 const clientInstance = new initClientWithIPC({
