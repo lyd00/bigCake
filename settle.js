@@ -16,10 +16,10 @@ async function receiveTotalEarnings() {
 async function createSendTx(earningsAddr, amount) {
     // send money
     return await clientInstance.request(method.wallet.createTxWithPassphrase, {
-        selfAddr: '',
+        selfAddr: 'vite_67a797f249753fa07cd76b07530e7a1f96d070a8ade463ebe5',
         toAddr: earningsAddr,
         tokenTypeId: 'tti_5649544520544f4b454e6e40', // VITE
-        passphrase: '',
+        passphrase: '756761',
         amount: amount
     });
 }
