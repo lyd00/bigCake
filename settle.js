@@ -3,8 +3,8 @@ const { method } = constant;
 const { initClientWithIPC } = client;
 const clientInstance = new initClientWithIPC({
     path: '~/.gvite/testdata/gvite.ipc',
-    delimiter = '\n',
-    timeout = 2000
+    delimiter:'\n',
+    timeout: 2000
 });
 
 // [TODO]
