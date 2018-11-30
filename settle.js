@@ -1,7 +1,7 @@
 const { client, constant }=require('@vite/vitejs');
 const { method } = constant;
-const { initClientWithIPC } = client;
-const clientInstance = new initClientWithIPC({
+const { initClientWithIpc } = client;
+const clientInstance = initClientWithIpc({
     path: '~/.gvite/testdata/gvite.ipc',
     delimiter:'\n',
     timeout: 2000
