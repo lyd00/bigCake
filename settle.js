@@ -1,15 +1,25 @@
-const { client, constant }=require('@vite/vitejs');
+const { client, constant } = require('@vite/vitejs');
 const { method } = constant;
 const { initClientWithIpc } = client;
-const clientInstance = initClientWithIpc({
+let clientInstance = null;
+initClientWithIpc({
     path: '~/.gvite/testdata/gvite.ipc',
-    delimiter:'\n',
+    delimiter: '\n',
     timeout: 2000
+}).then(c => {
+    console.log('connect success', c);
+    clientInstance = c;
+}, e => {
+    console.error('connect error')
+}).catch(e=>{
+    console.error('errorrrrrr',e)
 });
+
+const store = require('./store');
 
 // [TODO]
 async function receiveTotalEarnings() {
-    return await clientInstance.request(method.ledger.getAccountByAccAddr, 'selfAddr');
+    return await clientInstance.request(method.ledger.getAccountByAccAddr, 'vite_67a797f249753fa07cd76b07530e7a1f96d070a8ade463ebe5');
 }
 
 // [TODO]
@@ -24,7 +34,7 @@ async function createSendTx(earningsAddr, amount) {
     });
 }
 
-async function settle (allocation) {    
+async function settle(allocation) {
     let settleInfo = {
         fundMemberEarnings: {}
     }
@@ -32,7 +42,7 @@ async function settle (allocation) {
     let totalEarnings = await receiveTotalEarnings()
     settleInfo.totalEarnings = totalEarnings
 
-    Object.keys(allocation.fundMembersVote).forEach(function (name) { 
+    Object.keys(allocation.fundMembersVote).forEach(function (name) {
         let fundMember = allocation.fundMembersVote[name]
         fundMember.name = name
 
@@ -47,13 +57,22 @@ async function settle (allocation) {
 
     let job = {
         info: settleInfo,
-        commit: async () => {
+        commit: async (cycle) => {
             let keys = Object.keys(settleInfo.fundMemberEarnings)
-            for(i = 0; i < keys.length; i++) {
+            for (i = 0; i < keys.length; i++) {
                 let fundMember = settleInfo.fundMemberEarnings[keys[i]]
                 if (fundMember.earningsAddr) {
                     // send money
-                    await createSendTx(fundMember.earningsAddr, fundMember.earnings)
+                    const hasPaid = await store.hasPaid({ cycle, toAddress: fundMember.earningsAddr });
+                    if (hasPaid) {
+                        throw new Error('hasPaid!!!')
+                    }
+                    try {
+                        const res = await createSendTx(fundMember.earningsAddr, fundMember.earnings);
+                        await store.recordPayInfo({ cycle, toAddress: fundMember.earningsAddr, amount: fundMember.earnings });
+                    } catch (e) {
+                        console.error(e);
+                    }
                     printSettleInfo(fundMember, i)
                 }
             }
@@ -64,7 +83,7 @@ async function settle (allocation) {
     return job
 }
 
-function printSettleInfo (fundMember, index) {
+function printSettleInfo(fundMember, index) {
     console.log(`${index}.${fundMember.name}`)
     console.log(`地址列表: ${fundMember.addressList}`)
     console.log(`收益地址: ${fundMember.earningsAddr}`)

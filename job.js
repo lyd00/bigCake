@@ -29,7 +29,7 @@ async function runTask () {
     let settleJob = await settle(allocation)
 
     await store.insertCycleInfo(cycle, allocation, settleJob.info)
-    await settleJob.commit()
+    await settleJob.commit(cycle)
 }
 
 function startJob () {    

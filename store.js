@@ -32,7 +32,16 @@ class Store {
     async execSql (action, ...args) {
         return toPrimise(this.db[action].bind(this.db), ...args)
     }
+    async recordPayInfo({cycle,blockHash="default",toAddress,amount}){
+        const SQL = `INSERT INTO ${PAY_TABLE_NAME} (cycle, blockHash, toAddress,amount,sendTime) VALUES (?, ?, ?,?,?)`;
+        return await this.execSql('run', SQL, [cycle,blockHash,toAddress,amount, Date.now()])
 
+    }
+    async hasPaid({cycle,toAddress}){
+        const SQL = `SELECT INTO ${PAY_TABLE_NAME} (cycle, toAddress) VALUES (?, ?)`;
+        const res=await this.execSql('get', SQL, [cycle,toAddress]);
+        return !!res;
+    }
     async initTable () {
         const SQL = `CREATE TABLE IF NOT EXISTS ${CYCLE_TABLE_NAME} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,7 +54,8 @@ class Store {
             cycle INTEGER,
             blockHash STRING,
             toAddress STRING,
-            sendTime INTEGER
+            sendTime INTEGER,
+            amount INTEGER
         )`
 
         await this.execSql("run", SQL)
