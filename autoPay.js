@@ -5,9 +5,11 @@ const { client } = require("@vite/vitejs");
 const CronJob = require('cron').CronJob;
 const { superNodeName, tokenId, sbpAddr, passWord } = require('./config');
 
+console.log(`init ipc connect......`)
 const ipcClient = new client(new IPC("~/.gvite/testdata/gvite.ipc"));
 
 exports.init = async function init() {
+    console.log(`unlock wallet......`)
     return await ipcClient.request("wallet_unlock", sbpAddr, passWord)
 }
 
