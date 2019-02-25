@@ -1,7 +1,8 @@
 {
   "dependencies": {
-    "@vite/vitejs": "1.0.1-5",
+    "@vite/vitejs": "^1.1.4",
     "bluebird": "^3.5.3",
+    "cron": "^1.6.0",
     "koa": "^2.6.2",
     "koa-router": "^7.4.0",
     "leveldown": "^4.0.1",

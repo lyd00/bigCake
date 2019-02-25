@@ -58,7 +58,7 @@ function readFoundationMembers () {
 function findMember(clubMembers, address) {
     for (i = 0; i < clubMembers.length; i++) {
         member = clubMembers[i]
-        if (member.addrs.indexOf(address) >= 0) {
+        if (member.earningsAddr===address) {
             return member
         }
     }
@@ -95,7 +95,7 @@ async function calcAllocationByCycle(cycle, superNodeName) {
         }
         if (!fundMembersVote[memberName]) {
             fundMembersVote[memberName] = {
-                addressList: [],
+                address: addr,
                 
                 pledgeVote: 0,
                 pledgeVoteRatio: 0,
@@ -124,10 +124,6 @@ async function calcAllocationByCycle(cycle, superNodeName) {
         fundMembersVote[memberName].voteRatio = fundMembersVote[memberName].voteTotal / totalVote
 
         fundMembersVote[memberName].award = award.totalAward * fundMembersVote[memberName].voteRatio
-
-        if (fundMembersVote[memberName].addressList.indexOf(addr) < 0) {
-            fundMembersVote[memberName].addressList.push(addr) 
-        }
     });
 
     console.log("")
@@ -165,7 +161,7 @@ function printFundMembersVote(fundMembersVote) {
     Object.keys(fundMembersVote).forEach(function (name, index) {
         let vote = fundMembersVote[name]
         console.log(`${index}.${name}`)
-        console.log(`地址列表: ${vote.addressList}`)
+        console.log(`地址列表: ${vote.address}`)
         
         console.log(`抵押票量: ${vote.pledgeVote}`)
         console.log(`抵押票量占比: ${vote.pledgeVoteRatio}`)
