@@ -10,12 +10,13 @@ const ipcClient = new client(new IPC("~/.gvite/testdata/gvite.ipc"));
 
 exports.init = async function init() {
     console.log(`unlock wallet......`)
-    return await ipcClient.request("wallet_unlock", sbpAddr, passWord)
+    return await ipcClient.request("wallet_unlock", sbpAddr, passWord);
+    console.log(`unlock wallet success`)
 }
 
 
 exports.start = function start() {
-
+    console.log(`start job......`)
     new CronJob('0 0 22 * * ? *', function () {
         async function task() {
             let payError = []
@@ -49,7 +50,7 @@ exports.start = function start() {
 
 
 async function pay(address, amount) {
-    return console.log('testforpay')
+    return console.log('testforpay');
     return await ipcClient.request("", {
         selfAddr: sbpAddr,
         toAddr: address,
